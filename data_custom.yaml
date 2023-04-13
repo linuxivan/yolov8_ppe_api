@@ -1,0 +1,21 @@
+train: C:\Users\Ivan\Desktop\yolov8_ppe_recon/train
+val: C:/Users/Ivan/Desktop/yolov8_ppe_recon/val
+
+nc: 16
+
+names: ["dog",
+"person",
+"cat",
+"tv",
+"car",
+"meatballs",
+"marinara sauce",
+"tomato soup",
+"chicken noodle soup",
+"french onion soup",
+"chicken breast",
+"ribs",
+"pulled pork",
+"hamburger",
+"cavity",
+"glove"]
