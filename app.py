@@ -15,14 +15,14 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
-        if request.files['file']:
+        if 'file' not in request.files:
+            return jsonify("No file found")
+        else:
             file = request.files['file']
             file.save(file.filename)
             result = model.predict(file.filename, save=True, show=True)
             return jsonify(result)
-        else:
-            return jsonify("No file found")
-    
+        
 if __name__ == '__main__':
-    app.run(debug=True, port=8000, host='172.31.27.125')
+    app.run(debug=True, port=8000)
     
