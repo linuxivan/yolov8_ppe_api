@@ -1,17 +1,18 @@
 from ultralytics import YOLO
 from flask import Flask, request, jsonify, flash, redirect, url_for, render_template
-from flask_cors import CORS
+from flask_cors import cross_origin
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
 model = YOLO("yolov8_ppe.pt")
 
 @app.route('/')
+@cross_origin()
 def home():
     print("Hello World")
     return jsonify("Hello World")
 
 @app.route('/predict', methods=['POST'])
+@cross_origin()
 def predict():
    # return jsonify(request.form)
     if request.method == 'POST':
