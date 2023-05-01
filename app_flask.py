@@ -1,26 +1,23 @@
 from ultralytics import YOLO
 from flask import Flask, request, jsonify, flash, redirect, url_for, render_template
-from flask_cors import cross_origin
 
 app = Flask(__name__)
 model = YOLO("yolov8_ppe.pt")
 
 @app.route('/')
-@cross_origin()
 def home():
     print("Hello World")
     return jsonify("Hello World")
 
 @app.route('/predict', methods=['POST'])
-@cross_origin()
 def predict():
    # return jsonify(request.form)
     if request.method == 'POST':
-        if 'test' in request.form:
-            return jsonify("Test")
-        if 'file' not in request.files:
+        content = request.json
+        if content is None:
             return jsonify("No file found")
         else:
+            return jsonify(content)
             file = request.files['file']
             file.save(file.filename)
             result = model.predict(file.filename, save=True, show=True)
