@@ -1,7 +1,9 @@
 from ultralytics import YOLO
 from flask import Flask, request, jsonify, flash, redirect, url_for, render_template
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
 model = YOLO("yolov8_ppe.pt")
 
 @app.route('/')
@@ -13,7 +15,7 @@ def home():
 def predict():
    # return jsonify(request.form)
     if request.method == 'POST':
-        content = request.json
+        return jsonify(request.json, request.files, request.form)
         if content is None:
             return jsonify("No file found")
         else:
