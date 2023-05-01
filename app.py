@@ -1,31 +1,32 @@
 from ultralytics import YOLO
-from flask import Flask, request, jsonify, flash, redirect, url_for, render_template
-from flask_cors import cross_origin
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
-app = Flask(__name__)
+
+app = FastAPI()
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 model = YOLO("yolov8_ppe.pt")
 
-@app.route('/')
-@cross_origin()
-def home():
+@app.get('/')
+async def home():
     print("Hello World")
-    return jsonify("Hello World")
+    return JSONResponse("Hello World")
 
-@app.route('/predict', methods=['POST'])
-@cross_origin()
-def predict():
-   # return jsonify(request.form)
-    if request.method == 'POST':
-        if 'test' in request.form:
-            return jsonify("Test")
-        if 'file' not in request.files:
-            return jsonify("No file found")
-        else:
-            file = request.files['file']
-            file.save(file.filename)
-            result = model.predict(file.filename, save=True, show=True)
-            return jsonify(result)
-        
-if __name__ == '__main__':
-    app.run(debug=True, port=8000)
-    #app.run(debug=True, port=8000, host="172.31.27.125")
+@app.post('/predict')
+async def predict(file: UploadFile = File(...)):
+    file_name = file.filename
+    contents = await file.read()
+    with open(file_name, "wb") as f:
+        f.write(contents)
+    result = model.predict(file_name, save=True, show=True)
+    return JSONResponse(result)
