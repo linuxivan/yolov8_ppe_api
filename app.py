@@ -17,6 +17,8 @@ def predict():
     if request.method == 'POST':
         if 'file' not in request.files:
             return jsonify("No file found")
+        elif 'test' in request.form:
+            return jsonify("Test")
         else:
             file = request.files['file']
             file.save(file.filename)
